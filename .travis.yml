@@ -4,7 +4,12 @@ sudo: false
 env:
 - TOX_ENV=py27
 install:
-- pip install nose numpy tox
+- pip install conda
+- conda init
+- conda update conda --yes
+- deps='pip numpy nose tox'
+- conda create -p $HOME/py --yes $deps "python=$TRAVIS_PYTHON_VERSION"
+- export PATH=$HOME/py/bin:$PATH
 script:
 - tox -e $TOX_ENV
 notifications:
