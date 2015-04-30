@@ -1,0 +1,4 @@
+include *.rst
+include tox.ini
+# If your tests aren't part of the distributed package, make sure to include them
+recursive-include tests *
