@@ -18,11 +18,9 @@ class TestFourierBasis(object):
         assert_list_equal(result, [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]])
 
     def test_multipliers(self):
-        ranges = None
         d = 2
         n = 2
-        fourierbasis = FourierBasis(ranges, d, n)
-        multipliers = fourierbasis._multipliers(d, n).tolist()
+        multipliers = FourierBasis._multipliers(d, n).tolist()
         assert_list_equal(multipliers, [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]])
 
 

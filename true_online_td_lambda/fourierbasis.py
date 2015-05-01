@@ -21,6 +21,7 @@ class FourierBasis(object):
         self.ranges = numpy.array(ranges)
         self.d = d
         self.n = n
+        self.multipliers = FourierBasis._multipliers(d, n)
 
     def get_num_basis_functions(self):
         """Gets the number of basis functions
@@ -31,7 +32,8 @@ class FourierBasis(object):
         self.num_functions = (self.n + 1.0) ** self.d
         return self.num_functions
 
-    def _multipliers(self, d, n):
+    @staticmethod
+    def _multipliers(d, n):
         """Generates multipliers for the fourier basis.
         This corresponds to the c vector in the paper
         """
