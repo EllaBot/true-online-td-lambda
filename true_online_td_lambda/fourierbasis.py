@@ -32,6 +32,14 @@ class FourierBasis(object):
         self.num_functions = (self.n + 1.0) ** self.d
         return self.num_functions
 
+    def compute_features(self, features):
+        """Computes the nth order fourier basis for d variables
+        """
+        if len(features) == 0:
+            return numpy.ones(1)
+        basis = numpy.array([FourierBasis._scale(features[i], self.ranges, i) for i in xrange(len(features))])
+        return numpy.cos(numpy.pi * numpy.dot(self.multipliers, basis))
+
     @staticmethod
     def _scale(value, ranges, index):
         minimum = float(ranges[index, 0])

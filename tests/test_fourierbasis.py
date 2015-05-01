@@ -29,5 +29,12 @@ class TestFourierBasis(object):
         value = 3
         ranges = np.asarray([(0, 10)])
         index = 0
-
         assert_equal(FourierBasis._scale(value, ranges, index), 0.3)
+
+    def test_compute_features(self):
+        ranges = [(0, 1)]
+        features = [0.5]
+        d = 1
+        n = 2
+        fourierbasis = FourierBasis(ranges, d, n)
+        assert_equal(fourierbasis.compute_features(features)[0], 1.0)
