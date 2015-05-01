@@ -14,13 +14,15 @@ class TestFourierBasis(object):
 
     def test_cartesian(self):
         arrays = ([0, 1, 2], [0, 1, 2])
-        result = FourierBasis.cartesian(arrays).tolist()
+        result = FourierBasis._cartesian(arrays).tolist()
         assert_list_equal(result, [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]])
 
     def test_multipliers(self):
+        ranges = None
         d = 2
-        n = 3
-        multipliers = fourierbasis.__multipliers(d, n).tolist()
-        assert_list_equal(multipliers, [0, 10, 1, 11])
+        n = 2
+        fourierbasis = FourierBasis(ranges, d, n)
+        multipliers = fourierbasis._multipliers(d, n).tolist()
+        assert_list_equal(multipliers, [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]])
 
 

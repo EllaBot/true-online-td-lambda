@@ -31,15 +31,15 @@ class FourierBasis(object):
         self.num_functions = (self.n + 1.0) ** self.d
         return self.num_functions
 
-    def __multipliers(self, d, n):
+    def _multipliers(self, d, n):
         """Generates multipliers for the fourier basis.
         This corresponds to the c vector in the paper
         """
-        iter = itertools.product(range(n + 1), repeat = d)
-        return numpy.array([list(map(int, x)) for x in iter])
+        arrays = [list(range(n + 1)) for _ in itertools.repeat(None, d)]
+        return FourierBasis._cartesian(arrays)
 
     @staticmethod
-    def cartesian(arrays, out=None):
+    def _cartesian(arrays, out=None):
         """Generate a cartesian product of input arrays.
         Parameters
         ----------
