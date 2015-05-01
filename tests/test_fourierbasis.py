@@ -3,6 +3,8 @@ from true_online_td_lambda import FourierBasis
 from nose.tools import assert_equal
 from nose.tools import assert_list_equal
 
+import numpy as np
+
 class TestFourierBasis(object):
 
     def test_get_num_basis_functions(self):
@@ -23,4 +25,9 @@ class TestFourierBasis(object):
         multipliers = FourierBasis._multipliers(d, n).tolist()
         assert_list_equal(multipliers, [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]])
 
+    def test_scale(self):
+        value = 3
+        ranges = np.asarray([(0, 10)])
+        index = 0
 
+        assert_equal(FourierBasis._scale(value, ranges, index), 0.3)

@@ -33,6 +33,15 @@ class FourierBasis(object):
         return self.num_functions
 
     @staticmethod
+    def _scale(value, ranges, index):
+        minimum = float(ranges[index, 0])
+        maximum = float(ranges[index, 1])
+        if minimum == maximum:
+            return 0.0
+
+        return (value - minimum) / (maximum - minimum)
+
+    @staticmethod
     def _multipliers(d, n):
         """Generates multipliers for the fourier basis.
         This corresponds to the c vector in the paper
