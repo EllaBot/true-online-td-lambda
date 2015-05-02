@@ -40,6 +40,23 @@ class FourierBasis(object):
         basis = numpy.array([FourierBasis._scale(features[i], self.ranges, i) for i in xrange(len(features))])
         return numpy.cos(numpy.pi * numpy.dot(self.multipliers, basis))
 
+    def compute_gradient(self, features):
+        """Computes the gradient of the fourier basis
+        """
+        if len(features) == 0:
+            return numpy.zeros(1)
+
+        basis = numpy.array([FourierBasis._scale(features[i], self.ranges, i) for i in xrange(len(features))])
+
+        # Calculate outer derivative
+        outer_deriv = -numpy.sin(numpy.pi * numpy.dot(self.multipliers, basis))
+
+        # Calculate inner derivative
+        # ranges[:, 1] - ranges[:, 0] corresponds to upperbound - lowerbound
+        inner_deriv = numpy.pi * numpy.divide(self.multipliers, (self.ranges[:, 1] - self.ranges[:, 0]))
+
+        return (inner_deriv.T * outer_deriv).T
+
     @staticmethod
     def _scale(value, ranges, index):
         minimum = float(ranges[index, 0])
