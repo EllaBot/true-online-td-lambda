@@ -1,4 +1,4 @@
-from fourierbasis import FourierBasis
+from basis import FourierBasis
 import numpy as np
 from random import random
 class TrueOnlineTDLamda(object):

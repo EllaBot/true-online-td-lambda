@@ -1,4 +1,4 @@
-from true_online_td_lambda import FourierBasis
+from true_online_td_lambda.basis import FourierBasis
 
 from nose.tools import assert_equal
 from nose.tools import assert_list_equal

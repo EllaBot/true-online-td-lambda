@@ -1,3 +1,2 @@
-from .fourierbasis import FourierBasis
 from true_online_td_lamda import TrueOnlineTDLamda
-__all__ = ['TrueOnlineTDLamda', 'FourierBasis']
+__all__ = ['TrueOnlineTDLamda']
