@@ -38,3 +38,19 @@ class TestFourierBasis(object):
         n = 2
         fourierbasis = FourierBasis(ranges, d, n)
         assert_equal(fourierbasis.compute_features(features)[0], 1.0)
+
+    def test_compute_gradient(self):
+        ranges = [(0, 1), (0, 1)]
+        features = [0.3, 0.6]
+        features_delta_1 = [0.30000001, 0.6] # w.r.t feature 1
+        features_delta_2 = [0.3, 0.60000001] # w.r.t feature 2
+        d = 2
+        n = 2
+        fourierbasis = FourierBasis(ranges, d, n)
+        # Approximate gradient by derivative approximation
+        # (f(x + e) - f(x)) / e
+        approxgrad_1 = (fourierbasis.compute_features(features_delta_1) - fourierbasis.compute_features(features)) / 0.00000001
+        approxgrad_2 = (fourierbasis.compute_features(features_delta_2) - fourierbasis.compute_features(features)) / 0.00000001
+        realgrad = fourierbasis.compute_gradient(features)
+        np.testing.assert_almost_equal(realgrad, np.vstack((approxgrad_1, approxgrad_2)).T, decimal=6)
+
