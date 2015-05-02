@@ -36,9 +36,3 @@ class TrueOnlineTDLamda(object):
         self.theta += delta * self.traces + self.alpha * (vsprime - np.dot(self.theta, phi_t)) * phi_t
 
         self.vs = vsprime
-
-    def egreedy(self):
-        if random() < self.epsilon:
-            # Produce a random action
-            return
-        # Otherwise, find the best possible action to take from the current state
