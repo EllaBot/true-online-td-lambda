@@ -4,7 +4,7 @@ sudo: false
 env:
 - TOX_ENV=py27
 install:
-- pip install nose numpy tox
+- pip install nose numpy scipy tox
 script:
 - tox -e $TOX_ENV
 notifications:
