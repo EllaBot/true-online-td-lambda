@@ -1,7 +1,7 @@
 from true_online_td_lambda.basis import FourierBasis
 
-from nose.tools import assert_equal
-from nose.tools import assert_list_equal
+from nose.tools import assert_equal, assert_list_equal
+from numpy.testing import assert_array_equal
 
 import numpy as np
 
@@ -38,6 +38,17 @@ class TestFourierBasis(object):
         n = 2
         fourierbasis = FourierBasis(ranges, d, n)
         assert_equal(fourierbasis.compute_features(features)[0], 1.0)
+
+    def test_ranges(self):
+        ranges = [(0, 1)]
+        features = [0.5]
+        scaledranges = [(0, 20)]
+        scaledfeatures = [10]
+        d = 1
+        n = 2
+        fourierbasis = FourierBasis(ranges, d, n)
+        scaledbasis = FourierBasis(scaledranges, d, n)
+        assert_array_equal(fourierbasis.compute_features(features), scaledbasis.compute_features(scaledfeatures))
 
     def test_compute_gradient(self):
         ranges = [(0, 1), (0, 1)]

@@ -6,8 +6,8 @@ from random import random
 class TrueOnlineTDLambda(object):
     def __init__(self, numfeatures, ranges):
         self.alpha = 0.01
-        self.lmbda = 0.7
-        self.gamma = 1.0
+        self.lmbda = 0.9
+        self.gamma = 0.99
         self.basis = FourierBasis(ranges, numfeatures, 3)
         self.stateprime = None
         self.state = None
@@ -39,4 +39,5 @@ class TrueOnlineTDLambda(object):
         self.vs = vsprime
 
     def value(self, state):
+        print(self.basis.compute_features(state))
         return np.dot(self.theta, self.basis.compute_features(state))
