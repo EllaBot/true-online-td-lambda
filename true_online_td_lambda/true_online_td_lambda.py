@@ -1,7 +1,7 @@
 from basis import FourierBasis
 import numpy as np
 from random import random
-class TrueOnlineTDLamda(object):
+class TrueOnlineTDLambda(object):
     def __init__(self, numfeatures, ranges):
         self.alpha = 0.01
         self.epsilon = 0.1
