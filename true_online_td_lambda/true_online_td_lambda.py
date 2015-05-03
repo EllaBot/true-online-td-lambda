@@ -39,5 +39,4 @@ class TrueOnlineTDLambda(object):
         self.vs = vsprime
 
     def value(self, state):
-        print(self.basis.compute_features(state))
         return np.dot(self.theta, self.basis.compute_features(state))
