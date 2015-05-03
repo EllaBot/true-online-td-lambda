@@ -4,11 +4,21 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 from true_online_td_lambda import TrueOnlineTDLambda
 
+
 def plot_value_function(learner):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
-    x = y = np.arange(0, 1.0, 0.05)
+    ranges = learner.basis.ranges
+
+    x_range = ranges[0]
+    y_range = ranges[1]
+
+    x_resolution = (x_range[1] - x_range[0])/50.0
+    y_resolution = (y_range[1] - y_range[0])/50.0
+
+    x = np.arange(x_range[0], x_range[1], x_resolution)
+    y = np.arange(y_range[0], y_range[1], y_resolution)
     X, Y = np.meshgrid(x, y)
     zs = np.array([learner.value([x, y]) for x, y in zip(np.ravel(X), np.ravel(Y))])
     Z = zs.reshape(X.shape)

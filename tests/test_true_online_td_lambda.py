@@ -1,7 +1,6 @@
 from true_online_td_lambda import TrueOnlineTDLambda
 from nose.tools import assert_greater, assert_equal, assert_almost_equal
 from numpy.testing import assert_array_equal
-from true_online_td_lambda import learner_plotting_utilities
 
 class TestTrueOnlineTDLambda(object):
 
