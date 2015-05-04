@@ -39,8 +39,8 @@ class TrueOnlineTDLambda(object):
 
         self.vs = vsprime
 
-    def value(self, state):
-        return np.dot(self.theta, self.basis.compute_features(state))
+    def value(self, state_action):
+        return np.dot(self.theta, self.basis.compute_features(state_action))
 
     def maximize_value(self, state, maximize = l_bfgs.maximize):
         """Maximize the value function w.r.t the features
