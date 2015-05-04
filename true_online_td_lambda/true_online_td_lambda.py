@@ -1,4 +1,5 @@
 from basis import FourierBasis
+from optimization import l_bfgs
 import numpy as np
 from random import random
 
@@ -40,3 +41,23 @@ class TrueOnlineTDLambda(object):
 
     def value(self, state):
         return np.dot(self.theta, self.basis.compute_features(state))
+
+    def maximize_value(self, state, maximize = l_bfgs.maximize):
+        """Maximize the value function w.r.t the features
+
+        Parameters
+        ----------
+        state: list
+            List of values of the state
+
+        maximize: function, optional
+            Maximization function, l_bfgs by default
+        """
+        f = lambda x: self.value(np.concatenate((state, x)))
+        # Compute the gradient, and only select the column(s) which has partial derivatives w.r.t the actions
+        fprime = lambda x: np.dot(self.theta, self.basis.compute_gradient(np.concatenate((state, x)))[:, len(state):])
+
+        # Initial guess is the midpoint of range
+        initial_guess = np.array([(float(self.basis.ranges[i][1]) + float(self.basis.ranges[i][0])) / 2.0 for i in range(len(state), len(self.basis.ranges))])
+
+        return maximize(f, initial_guess, fprime)
