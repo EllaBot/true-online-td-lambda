@@ -18,7 +18,7 @@ class FourierBasis(object):
     """
 
     def __init__(self, ranges, d, n = 3):
-        self.ranges = numpy.array(ranges)
+        self.ranges = numpy.array(ranges, dtype=numpy.dtype(float))
         self.d = d
         self.n = n
         self.multipliers = FourierBasis._multipliers(d, n)
