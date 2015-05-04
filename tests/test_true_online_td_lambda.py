@@ -11,7 +11,7 @@ class TestTrueOnlineTDLambda(object):
         state_three = [0.5, 0.5]
         learner = TrueOnlineTDLambda(2, [(0, 1), (0, 1)])
 
-        learner.step(100, [0, 1])
+        learner.start([0, 1])
         for x in range(0, 100):
             learner.step(10, state_two)
         for x in range(0, 100):
@@ -25,29 +25,28 @@ class TestTrueOnlineTDLambda(object):
         state_one = [0.0, 0.0]
         learner = TrueOnlineTDLambda(2, [(0, 1), (0, 1)])
         r = 20
+        learner.start(state_one)
         for i in range(100):
             learner.step(-r, state_one)
 
         for i in range(100):
             learner.step(r, [1.0, 1.0])
 
-
         learner_scaled = TrueOnlineTDLambda(2, [(0, 20.0), (0, 20.0)])
+        learner_scaled.start(state_one)
         for i in range(100):
             learner_scaled.step(-r, state_one)
 
         for i in range(100):
             learner_scaled.step(r, [20.0, 20.0])
 
-        print(learner.theta)
-        print(learner_scaled.theta)
         assert_array_equal(learner.theta, learner_scaled.theta)
         assert_almost_equal(learner.value([1.0, 1.0]), learner_scaled.value([20.0, 20.0]))
         assert_almost_equal(learner.value(state_one), learner_scaled.value(state_one))
 
     def test_maximize_value(self):
         learner = TrueOnlineTDLambda(2, [(0, 10), (0, 10)])
-
+        learner.start([0, 0])
         for n in range(100):
             i = n / 10.0
             diff = i - 7.6 # 7.6 is the target
