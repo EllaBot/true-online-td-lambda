@@ -60,4 +60,7 @@ class TrueOnlineTDLambda(object):
         # Initial guess is the midpoint of range
         initial_guess = np.array([(float(self.basis.ranges[i][1]) + float(self.basis.ranges[i][0])) / 2.0 for i in range(len(state), len(self.basis.ranges))])
 
-        return maximize(f, initial_guess, fprime)
+        # Bounds of f
+        bounds = self.basis.ranges[len(state):].tolist()
+
+        return maximize(f, initial_guess, fprime, bounds=bounds)
