@@ -59,3 +59,15 @@ class TestTrueOnlineTDLambda(object):
 
         assert_greater(learner.value([state_1, max_action]), learner.value([state_1, max_action - 0.01]))
         assert_greater(learner.value([state_1, max_action]), learner.value([state_1, max_action + 0.01]))
+
+    def test_maximize_value_no_setup(self):
+        learner = TrueOnlineTDLambda(2, [(0, 10), (0, 10)])
+
+        max_action = learner.maximize_value([0.0])
+        max_action_two = learner.maximize_value([7.6])
+
+        print(max_action)
+
+        # Regardless of the state, the maximum should be the midpoint of the range
+        assert_equal(max_action, 5.0)
+        assert_equal(max_action_two, 5.0)

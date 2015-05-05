@@ -21,6 +21,7 @@ class TrueOnlineTDLambda(object):
     """
     def start(self, state):
         self.stateprime = state
+        self.vs = self.value(state)
 
     """ See "True Online TD(lambda)" section 4.1
     """
@@ -29,12 +30,13 @@ class TrueOnlineTDLambda(object):
         self.state = self.stateprime
         self.stateprime = state
 
+        assert self.state is not None and self.stateprime is not None
         phi_t = self.basis.compute_features(self.state)
         phi_tp = self.basis.compute_features(self.stateprime)
         vsprime = np.dot(self.theta, phi_tp)
 
         self.updatetraces(phi_t)
-        self.updateweights(phi_t, reward, vsprime, self.vs)
+        self.updateweights(phi_t, reward, self.vs, vsprime)
 
         self.vs = vsprime
 
@@ -45,7 +47,7 @@ class TrueOnlineTDLambda(object):
 
     def updateweights(self, phi_t, reward, vs, vsprime):
         delta = reward + (self.gamma * vsprime) - vs
-        self.theta += delta * self.traces + self.alpha * (vsprime - np.dot(self.theta, phi_t)) * phi_t
+        self.theta += delta * self.traces + self.alpha * (vs - np.dot(self.theta, phi_t)) * phi_t
 
     """ Receive the reward from the final action.
         This action does not produce an additional state, so we update a little differently.
@@ -61,7 +63,6 @@ class TrueOnlineTDLambda(object):
 
         # Clear episode specific learning artifacts
         self._reset()
-        pass
 
     def value(self, state_action):
         return np.dot(self.theta, self.basis.compute_features(state_action))
@@ -94,4 +95,3 @@ class TrueOnlineTDLambda(object):
         self.stateprime = None
         self.vs = None
         self.traces.fill(0.0)
-
