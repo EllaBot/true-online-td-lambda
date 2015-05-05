@@ -35,27 +35,32 @@ class FourierBasis(object):
     def compute_features(self, features):
         """Computes the nth order fourier basis for d variables
         """
-        if len(features) == 0:
-            return numpy.ones(1)
-        basis = numpy.array([FourierBasis._scale(features[i], self.ranges, i) for i in xrange(len(features))])
-        return numpy.cos(numpy.pi * numpy.dot(self.multipliers, basis))
+        return self.compute_scaled_features(self.scale_features(features))
 
-    def compute_gradient(self, features):
+    def compute_scaled_features(self, scaled_features):
+        """Computes the nth order fourier basis for d variables
+        """
+        if len(scaled_features) == 0:
+            return numpy.ones(1)
+        return numpy.cos(numpy.pi * numpy.dot(self.multipliers, scaled_features))
+
+    def compute_gradient(self, scaled_features):
         """Computes the gradient of the fourier basis
         """
-        if len(features) == 0:
+        if len(scaled_features) == 0:
             return numpy.zeros(1)
 
-        basis = numpy.array([FourierBasis._scale(features[i], self.ranges, i) for i in xrange(len(features))])
-
         # Calculate outer derivative
-        outer_deriv = -numpy.sin(numpy.pi * numpy.dot(self.multipliers, basis))
+        outer_deriv = -numpy.sin(numpy.pi * numpy.dot(self.multipliers, scaled_features))
 
         # Calculate inner derivative
         # ranges[:, 1] - ranges[:, 0] corresponds to upperbound - lowerbound
-        inner_deriv = numpy.pi * numpy.divide(self.multipliers, (self.ranges[:, 1] - self.ranges[:, 0]))
+        inner_deriv = numpy.pi * self.multipliers
 
         return (inner_deriv.T * outer_deriv).T
+
+    def scale_features(self, features):
+        return numpy.array([FourierBasis._scale(features[i], self.ranges, i) for i in xrange(len(features))])
 
     @staticmethod
     def _scale(value, ranges, index):

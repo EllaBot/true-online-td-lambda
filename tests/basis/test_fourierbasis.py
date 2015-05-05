@@ -58,6 +58,7 @@ class TestFourierBasis(object):
         d = 2
         n = 2
         fourierbasis = FourierBasis(ranges, d, n)
+
         # Approximate gradient by derivative approximation
         # (f(x + e) - f(x)) / e
         approxgrad_1 = (fourierbasis.compute_features(features_delta_1) - fourierbasis.compute_features(features)) / 0.00000001
