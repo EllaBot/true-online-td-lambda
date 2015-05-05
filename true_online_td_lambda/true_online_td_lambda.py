@@ -5,10 +5,10 @@ from random import random
 
 
 class TrueOnlineTDLambda(object):
-    def __init__(self, numfeatures, ranges):
-        self.alpha = 0.01
-        self.lmbda = 0.9
-        self.gamma = 0.99
+    def __init__(self, numfeatures, ranges, alpha = 0.01, lmda = 0.9, gamma = 0.99):
+        self.alpha = alpha
+        self.lmbda = lmda
+        self.gamma = gamma
         self.basis = FourierBasis(ranges, numfeatures, 3)
         self.stateprime = None
         self.state = None
