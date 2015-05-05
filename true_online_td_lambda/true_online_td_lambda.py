@@ -78,17 +78,24 @@ class TrueOnlineTDLambda(object):
         maximize: function, optional
             Maximization function, l_bfgs by default
         """
-        f = lambda x: self.value(np.concatenate((state, x)))
+        # Scale state
+        state_scaled = self.basis.scale_features(state)
+
+        f = lambda x: np.dot(self.theta, self.basis.compute_scaled_features(np.concatenate((state_scaled, x))))
         # Compute the gradient, and only select the column(s) which has partial derivatives w.r.t the actions
-        fprime = lambda x: np.dot(self.theta, self.basis.compute_gradient(np.concatenate((state, x)))[:, len(state):])
+        fprime = lambda x: np.dot(self.theta, self.basis.compute_gradient(np.concatenate((state_scaled, x)))[:, len(state):])
 
         # Initial guess is the midpoint of range
-        initial_guess = np.array([(float(self.basis.ranges[i][1]) + float(self.basis.ranges[i][0])) / 2.0 for i in range(len(state), len(self.basis.ranges))])
+        initial_guess = self.basis.scale_features([(float(self.basis.ranges[i][1]) + float(self.basis.ranges[i][0])) / 2.0 for i in range(len(state), len(self.basis.ranges))])
 
-        # Bounds of f
-        bounds = self.basis.ranges[len(state):].tolist()
+        # Bounds
+        bounds = [[0.0, 1.0]] * (len(self.basis.ranges) - len(state))
 
-        return maximize(f, initial_guess, fprime, bounds=bounds)
+        maximum = maximize(f, initial_guess, fprime, bounds=bounds)
+
+        # Unscale features
+        ranges = self.basis.ranges[-len(maximum):]
+        return maximum * (ranges[:, 1] - ranges[:, 0]) + ranges[:, 0]
 
     def _reset(self):
         self.state = None
