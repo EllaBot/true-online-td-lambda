@@ -1,6 +1,7 @@
 from basis import FourierBasis
 from optimization import l_bfgs
 import numpy as np
+import math
 from random import random
 
 
@@ -32,8 +33,7 @@ class TrueOnlineTDLambda(object):
 
         assert self.state is not None and self.stateprime is not None
         phi_t = self.basis.compute_features(self.state)
-        phi_tp = self.basis.compute_features(self.stateprime)
-        vsprime = np.dot(self.theta, phi_tp)
+        vsprime = self.value(self.stateprime)
 
         self.updatetraces(phi_t)
         self.updateweights(phi_t, reward, self.vs, vsprime)
@@ -57,7 +57,7 @@ class TrueOnlineTDLambda(object):
             # If we're ending before we have a state, we
             # don't have enough data to perform an update. Just reset.
             self._reset()
-            return 
+            return
         phi_t = self.basis.compute_features(self.state)
         # There is no phi_tp because there is no second state, so we'll
         # set the value of the second state to zero.
@@ -70,7 +70,9 @@ class TrueOnlineTDLambda(object):
         self._reset()
 
     def value(self, state_action):
-        return np.dot(self.theta, self.basis.compute_features(state_action))
+        value = np.dot(self.theta, self.basis.compute_features(state_action))
+        assert not math.isnan(value)
+        return value
 
     def maximize_value(self, state, maximize = l_bfgs.maximize):
         """Maximize the value function w.r.t the features
