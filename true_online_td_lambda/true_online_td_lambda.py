@@ -1,12 +1,12 @@
 from basis import FourierBasis
-from optimization import l_bfgs
+from optimization import l_bfgs, brute
 import numpy as np
 import math
 from random import random
 
 
 class TrueOnlineTDLambda(object):
-    def __init__(self, numfeatures, ranges, alpha = 0.01, lmda = 0.9, gamma = 0.99):
+    def __init__(self, numfeatures, ranges, alpha = 0.0001, lmda = 0.9, gamma = 0.99):
         self.alpha = alpha
         self.lmbda = lmda
         self.gamma = gamma
@@ -74,7 +74,7 @@ class TrueOnlineTDLambda(object):
         assert not math.isnan(value)
         return value
 
-    def maximize_value(self, state, maximize = l_bfgs.maximize):
+    def maximize_value(self, state, maximize = brute.maximize):
         """Maximize the value function w.r.t the features
 
         Parameters
@@ -88,7 +88,7 @@ class TrueOnlineTDLambda(object):
         # Scale state
         state_scaled = self.basis.scale_features(state)
 
-        f = lambda x: np.dot(self.theta, self.basis.compute_scaled_features(np.concatenate((state_scaled, x))))
+        f = lambda x: np.dot(self.theta, self.basis.compute_scaled_features(np.append(state_scaled, x)))
         # Compute the gradient, and only select the column(s) which has partial derivatives w.r.t the actions
         fprime = lambda x: np.dot(self.theta, self.basis.compute_gradient(np.concatenate((state_scaled, x)))[:, len(state):])
 
@@ -98,7 +98,7 @@ class TrueOnlineTDLambda(object):
         # Bounds
         bounds = [[0.0, 1.0]] * (len(self.basis.ranges) - len(state))
 
-        maximum = maximize(f, initial_guess, fprime, bounds=bounds)
+        maximum = maximize(f, x0=initial_guess, func_prime=fprime, bounds=bounds)
 
         # Unscale features
         ranges = self.basis.ranges[-len(maximum):]
