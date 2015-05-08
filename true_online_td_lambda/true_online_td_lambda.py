@@ -53,6 +53,11 @@ class TrueOnlineTDLambda(object):
         This action does not produce an additional state, so we update a little differently.
     """
     def end(self, reward):
+        if self.state is None:
+            # If we're ending before we have a state, we
+            # don't have enough data to perform an update. Just reset.
+            self._reset()
+            return 
         phi_t = self.basis.compute_features(self.state)
         # There is no phi_tp because there is no second state, so we'll
         # set the value of the second state to zero.
