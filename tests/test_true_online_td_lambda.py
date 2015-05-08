@@ -1,4 +1,5 @@
 from true_online_td_lambda import TrueOnlineTDLambda
+from true_online_td_lambda.optimization import l_bfgs, brute
 import math
 from nose.tools import assert_greater, assert_equal, assert_almost_equal
 from numpy.testing import assert_array_equal
@@ -54,18 +55,25 @@ class TestTrueOnlineTDLambda(object):
             learner.step(-math.sqrt(diff ** 2 + diff ** 2), [float(i), float(i)])
 
         state_1 = 5.0  # fix state one
-        max_action = learner.maximize_value([state_1])
+        max_action = learner.maximize_value([state_1], maximize=l_bfgs.maximize)
 
         print(max_action)
 
-        assert_greater(learner.value([state_1, max_action]), learner.value([state_1, max_action - 0.01]))
-        assert_greater(learner.value([state_1, max_action]), learner.value([state_1, max_action + 0.01]))
+        assert_greater(learner.value([state_1, max_action[0]]), learner.value([state_1, max_action[0] - 0.01]))
+        assert_greater(learner.value([state_1, max_action[0]]), learner.value([state_1, max_action[0] + 0.01]))
+
+        max_action = learner.maximize_value([state_1], maximize=brute.maximize)
+
+        print(max_action)
+
+        assert_greater(learner.value([state_1, max_action[0]]), learner.value([state_1, max_action[0] - 0.01]))
+        assert_greater(learner.value([state_1, max_action[0]]), learner.value([state_1, max_action[0] + 0.01]))
 
     def test_maximize_value_no_setup(self):
         learner = TrueOnlineTDLambda(2, [(0, 10), (0, 10)])
 
-        max_action = learner.maximize_value([0.0])
-        max_action_two = learner.maximize_value([7.6])
+        max_action = learner.maximize_value([0.0], maximize=l_bfgs.maximize)
+        max_action_two = learner.maximize_value([7.6], maximize=l_bfgs.maximize)
 
         print(max_action)
 
