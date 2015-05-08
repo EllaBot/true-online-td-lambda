@@ -38,13 +38,12 @@ def plot_four_feature_value_function(learner, hold_one, at_value, hold_two, at_v
     assert 0 <= hold_one < 4
     assert 0 <= hold_two < 4
     assert hold_one is not hold_two
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    plt.clf()
 
     ranges = learner.basis.ranges
 
-    x_range = ranges[hold_one]
-    y_range = ranges[hold_two]
+    x_range = ranges[2]
+    y_range = ranges[3]
 
     x_resolution = (x_range[1] - x_range[0])/50.0
     y_resolution = (y_range[1] - y_range[0])/50.0
@@ -54,16 +53,28 @@ def plot_four_feature_value_function(learner, hold_one, at_value, hold_two, at_v
     X, Y = np.meshgrid(x, y)
     zs = np.array([learner.value([at_value, at_value_two, x, y]) for x, y in zip(np.ravel(X), np.ravel(Y))])
     Z = zs.reshape(X.shape)
-
-    ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=True)
-    ax.set_xlabel('Feature One')
-    ax.set_ylabel('Feature Two')
-    ax.set_zlabel('Value')
-
-    plt.draw()
+    _plot(X,Y,Z)
 
 def _plot(X,Y,Z):
-    pass
+    plt
+    ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=True)
+    plt.draw()
 
 def show():
+    plt.show()
+
+def begin():
+    plt.ion()
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    ax.set_xlabel('Linear Velocity')
+    ax.set_ylabel('Angular Velocity')
+    ax.set_zlabel('Value function with distance ' + str(at_value) + ' and omega ' + str(at_value_two))
+    plt.draw()
+    plt.show()
+
+def freeze_plot(self):
+    self.plot()
+    plt.ioff()
     plt.show()

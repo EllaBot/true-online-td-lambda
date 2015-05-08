@@ -40,6 +40,7 @@ class TestTrueOnlineTDLambda(object):
         for i in range(100):
             learner_scaled.step(r, [20.0, 20.0])
 
+        # The problem are in fact, identical. Theta should not be affected by arbitrary scales.
         assert_array_equal(learner.theta, learner_scaled.theta)
         assert_almost_equal(learner.value([1.0, 1.0]), learner_scaled.value([20.0, 20.0]))
         assert_almost_equal(learner.value(state_one), learner_scaled.value(state_one))
@@ -49,10 +50,10 @@ class TestTrueOnlineTDLambda(object):
         learner.start([0, 0])
         for n in range(100):
             i = n / 10.0
-            diff = i - 7.6 # 7.6 is the target
+            diff = i - 7.6  # 7.6 is the target
             learner.step(-math.sqrt(diff ** 2 + diff ** 2), [float(i), float(i)])
 
-        state_1 = 5.0 # fix state one
+        state_1 = 5.0  # fix state one
         max_action = learner.maximize_value([state_1])
 
         print(max_action)
@@ -71,3 +72,12 @@ class TestTrueOnlineTDLambda(object):
         # Regardless of the state, the maximum should be the midpoint of the range
         assert_equal(max_action, 5.0)
         assert_equal(max_action_two, 5.0)
+
+    def test_four_dimensions(self):
+        learner = TrueOnlineTDLambda(4, [(-1, 1), (-1, 1), (0, 100), (-1, 1)])
+
+        learner.start([0, 0, 100, 1])
+        for x in range(0, 100):
+            distance = 100 - x
+            learner.step(-distance, [0, 0, distance, distance/100])
+        learner.end(100)
