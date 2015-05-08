@@ -38,7 +38,6 @@ def plot_four_feature_value_function(learner, hold_one, at_value, hold_two, at_v
     assert 0 <= hold_one < 4
     assert 0 <= hold_two < 4
     assert hold_one is not hold_two
-    plt.clf()
 
     ranges = learner.basis.ranges
 
@@ -56,8 +55,14 @@ def plot_four_feature_value_function(learner, hold_one, at_value, hold_two, at_v
     _plot(X,Y,Z)
 
 def _plot(X,Y,Z):
-    plt
+    plt.cla()
+    plt.clf()
+    fig = plt.gcf()
+    ax = fig.add_subplot(111, projection='3d')
     ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=True)
+    ax.set_xlabel('Linear Velocity')
+    ax.set_ylabel('Angular Velocity')
+    ax.set_zlabel('Value function with fixed distance and omega')
     plt.draw()
 
 def show():
@@ -65,16 +70,9 @@ def show():
 
 def begin():
     plt.ion()
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-
-    ax.set_xlabel('Linear Velocity')
-    ax.set_ylabel('Angular Velocity')
-    ax.set_zlabel('Value function with distance ' + str(at_value) + ' and omega ' + str(at_value_two))
-    plt.draw()
     plt.show()
 
-def freeze_plot(self):
-    self.plot()
+
+def freeze_plot():
     plt.ioff()
     plt.show()
