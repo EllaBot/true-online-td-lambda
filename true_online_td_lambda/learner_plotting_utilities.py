@@ -31,9 +31,17 @@ def plot_two_feature_value_function(learner):
     plt.draw()
 
 
-"""
-"""
 def plot_four_feature_value_function(learner, hold_one, at_value, hold_two, at_value_two):
+    """Plot a 3d representation of a four feature value function by holding
+    two dimensions constant.
+
+
+    :param learner: the learner to plot values from
+    :param hold_one: the first feature index to hold constant
+    :param at_value: the value to hold the feature at
+    :param hold_two: the second feature index to hold constant
+    :param at_value_two: the value to hold the feature at
+    """
     assert learner.basis.d is 4
     assert 0 <= hold_one < 4
     assert 0 <= hold_two < 4
@@ -44,6 +52,8 @@ def plot_four_feature_value_function(learner, hold_one, at_value, hold_two, at_v
     x_range = ranges[2]
     y_range = ranges[3]
 
+    # This determines how densely the grid is. To cut down on computational
+    # cost, we'll keep it a bit sparse.
     x_resolution = (x_range[1] - x_range[0])/50.0
     y_resolution = (y_range[1] - y_range[0])/50.0
 
@@ -52,9 +62,16 @@ def plot_four_feature_value_function(learner, hold_one, at_value, hold_two, at_v
     X, Y = np.meshgrid(x, y)
     zs = np.array([learner.value([at_value, at_value_two, x, y]) for x, y in zip(np.ravel(X), np.ravel(Y))])
     Z = zs.reshape(X.shape)
-    _plot(X,Y,Z)
+    _plot(X, Y, Z)
 
-def _plot(X,Y,Z):
+
+def _plot(X, Y, Z):
+    """ Plot three dimensions of information as a surface.
+
+    :param X:
+    :param Y:
+    :param Z:
+    """
     plt.cla()
     plt.clf()
     fig = plt.gcf()
@@ -65,8 +82,10 @@ def _plot(X,Y,Z):
     ax.set_zlabel('Value function with fixed distance and omega')
     plt.draw()
 
+
 def show():
     plt.show()
+
 
 def begin():
     plt.ion()
